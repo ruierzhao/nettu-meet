@@ -31,11 +31,12 @@ jobs:
         cd frontend
         npm install
         npm run build
+        ls -l 
       env:
         CI: false # https://stackoverflow.com/questions/63445967/githubs-action-is-not-building-react-application
     - name: Upload build artifact
       uses: actions/upload-artifact@v3
       with:
         name: frontend-build
-        path: ./build
+        path: ./
 
