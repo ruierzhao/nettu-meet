@@ -1,0 +1,35 @@
+name: buildruier
+
+on:
+  push:
+    branches:
+      - "main"
+    paths:
+      - "frontend/**"
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node_version: [14]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node_version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node_version }}
+      - name: Install deps
+        run: |
+          cd frontend
+          npm install
+          npm run build
+        env:
+          CI: false # https://stackoverflow.com/questions/63445967/githubs-action-is-not-building-react-application
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: frontend-build
+          path: ./
+
