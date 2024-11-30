@@ -7,7 +7,7 @@ on:
       - main
 
 jobs:
-  build:
+  build-server:
     name: Build
     runs-on: ubuntu-20.04
     steps:
@@ -21,13 +21,20 @@ jobs:
           tsc
           cp src/docs/swagger.yaml dist/docs/swagger.yaml
           zip -r server-ubuntu-20.4.zip .
-      - name: Configure AWS credentials from Test account
-        uses: aws-actions/configure-aws-credentials@v1
+          ls -l
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v3
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
-          aws-region: eu-west-1
-      - name: Upload artifacts
-        run: |
-          cd server  
-          aws s3 cp server-ubuntu-20.4.zip s3://nettu-meet-code-artifacts/server-ubuntu-20.4.zip --acl public-read
+          name: frontend-build
+          path: server/server-ubuntu-20.4.zip
+          
+      # - name: Configure AWS credentials from Test account
+      #   uses: aws-actions/configure-aws-credentials@v1
+      #   with:
+      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+      #     aws-region: eu-west-1
+      # - name: Upload artifacts
+      #   run: |
+      #     cd server  
+      #     aws s3 cp server-ubuntu-20.4.zip s3://nettu-meet-code-artifacts/server-ubuntu-20.4.zip --acl public-read
